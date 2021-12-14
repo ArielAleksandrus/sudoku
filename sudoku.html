@@ -1,0 +1,127 @@
+<html>
+	<head>
+		<style>
+			#map {
+				border-collapse: collapse;
+			}
+			.s-row:nth-child(3n) {
+				border-bottom: 4px solid red;
+			}
+			.s-row:nth-child(1) {
+				border-top: 4px solid red;
+			}
+			.cell:nth-child(3n) {
+				border-right: 4px solid red;
+			}
+			.cell:nth-child(1) {
+				border-left: 4px solid red;
+			}
+			.cell-input {
+				width: 60px;
+				height: 60px;
+				font-size: 1.5em;
+				text-align: center;
+			}
+			.build {
+				text-align: center;
+			}
+			.build button {
+				padding: 2em;
+			}
+		</style>
+	</head>
+	<body>
+		<input id="size" type="number" value="9" onchange="changeSize()"/>
+		<table id="map"></table>
+
+		<br/>
+		<div class="build">
+			<button onclick="result()">BUILD</button>
+		</div>
+		<hr/>
+
+		<span id="result"></span>
+	</body>
+	<script>
+		var size = 9;
+		var map;
+
+		var values;
+
+		function changeSize() {
+			size = document.getElementById("size").value;
+			buildMap();
+			console.log(size);
+		}
+
+		function init() {
+			map = document.getElementById("map");
+			map.children = [];
+			buildMap();
+		}
+
+		function buildMap() {
+			clearMap();
+
+			values = [];
+
+			for(let i = 0; i < size; i++) {
+				values.push([]);
+
+				let row = document.createElement("tr");
+				row.setAttribute("class", "s-row");
+				for(let j = 0; j < size; j++) {
+					values[i].push(0);
+
+					let td = document.createElement("td");
+
+					td.setAttribute("class", "cell");
+
+					let input = document.createElement("input");
+					input.type = "number";
+					input.id = "m" + i + "-" + j;
+					input.setAttribute("onchange", "changeMapValue(" + i + "," + j + ")");
+					input.setAttribute("class", "cell-input");
+
+					td.appendChild(input);
+
+					row.appendChild(td);
+				}
+
+				map.appendChild(row);
+			}
+		}
+
+		function changeMapValue(i, j) {
+			let el = document.getElementById("m" + i + "-" + j);
+			let value = el.value;
+
+			values[i][j] = value;
+
+			result();
+		}
+
+		function clearMap() {
+			let rows = map.children;
+			for(let row of rows) {
+				map.removeChild(row);
+			}
+		}
+
+		function result() {
+			let res =  size + ' ';
+			for(let i = 0; i < size; i++) {
+				for(let j = 0; j < size; j++) {
+					res += values[i][j] + " ";
+				}
+			}
+
+			res = res.substr(0, res.length - 1); // remove last whitespace
+			document.getElementById("result").textContent = res;
+		}
+
+		(function () {
+			init();
+		})();
+	</script>
+</html>
