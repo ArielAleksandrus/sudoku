@@ -4,7 +4,7 @@ Solves a sudoku puzzle.
 
 Usage:
 
-  ./a.out [args]
+  ./a.out [dimension] [sudoku numbers]
   
   Arguments consist in numbers separated by a single whitespace. First number is the sudoku size. Sudokus are normally of size **9** (because they are 9 by 9).
   All other numbers are sudoku's numbers (0 for unknown).
@@ -13,3 +13,5 @@ Usage:
  
 
 ./a.out 4 4 0 0 0 3 0 2 0 0 0 0 2 0 0 0 0
+
+To get whole arguments (dimension AND sudoku numbers) formatted for you, use **sudoku.html**
