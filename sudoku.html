@@ -4,13 +4,31 @@
 			#map {
 				border-collapse: collapse;
 			}
-			.s-row:nth-child(3n) {
+			.s-row-2:nth-child(2n) {
+				border-bottom: 4px solid red;
+			}
+			.s-row-3:nth-child(3n) {
+				border-bottom: 4px solid red;
+			}
+			.s-row-4:nth-child(4n) {
+				border-bottom: 4px solid red;
+			}
+			.s-row-5:nth-child(5n) {
 				border-bottom: 4px solid red;
 			}
 			.s-row:nth-child(1) {
 				border-top: 4px solid red;
 			}
-			.cell:nth-child(3n) {
+			.cell-2:nth-child(2n) {
+				border-right: 4px solid red;
+			}
+			.cell-3:nth-child(3n) {
+				border-right: 4px solid red;
+			}
+			.cell-4:nth-child(4n) {
+				border-right: 4px solid red;
+			}
+			.cell-5:nth-child(5n) {
 				border-right: 4px solid red;
 			}
 			.cell:nth-child(1) {
@@ -50,8 +68,10 @@
 
 		function changeSize() {
 			size = document.getElementById("size").value;
-			buildMap();
-			console.log(size);
+			clearMap();
+			setTimeout(function() {
+				buildMap();
+			}, 500);
 		}
 
 		function init() {
@@ -61,24 +81,25 @@
 		}
 
 		function buildMap() {
-			clearMap();
 
 			values = [];
+
+			let block_size = Math.sqrt(size);
 
 			for(let i = 0; i < size; i++) {
 				values.push([]);
 
 				let row = document.createElement("tr");
-				row.setAttribute("class", "s-row");
+				row.setAttribute("class", "s-row s-row-" + block_size);
 				for(let j = 0; j < size; j++) {
 					values[i].push(0);
 
 					let td = document.createElement("td");
 
-					td.setAttribute("class", "cell");
+					td.setAttribute("class", "cell cell-" + block_size);
 
 					let input = document.createElement("input");
-					input.type = "number";
+					input.type = "text";
 					input.id = "m" + i + "-" + j;
 					input.setAttribute("onchange", "changeMapValue(" + i + "," + j + ")");
 					input.setAttribute("class", "cell-input");
@@ -94,18 +115,31 @@
 
 		function changeMapValue(i, j) {
 			let el = document.getElementById("m" + i + "-" + j);
-			let value = el.value;
+			let value = el.value.toLowerCase();
+			const aCode = 'a'.charCodeAt(0);
 
-			values[i][j] = value;
+			console.log(value, aCode, value.charCodeAt(0));
+
+			if(value == '') {
+				value = 0;
+			} else {
+				let charCode = value.charCodeAt(0);
+				if(charCode >= aCode) {
+					value = 10 + charCode - aCode;
+				}
+			}
+
+			values[i][j] = parseInt(value);
 
 			result();
 		}
 
 		function clearMap() {
-			let rows = map.children;
-			for(let row of rows) {
-				map.removeChild(row);
-			}
+			setTimeout(function() {
+				map.removeChild(map.children[0]);
+				if(map.children.length > 0)
+					clearMap();
+			}, 20);
 		}
 
 		function result() {
