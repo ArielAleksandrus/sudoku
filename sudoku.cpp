@@ -29,6 +29,7 @@ typedef struct Known {
 };
 Map* extractArgs(int, char**);
 void printMap(Map*);
+void printSeparator(int);
 Map* copyMap(Map*);
 bool resolve(Map*, Try*);
 Known* findPossibilities(Map*, int, int);
@@ -175,7 +176,9 @@ void addToKnown(Known* known, int val) {
 }
 
 Map* extractArgs(int argc, char** argv) {
-	int size = argv[1][0] - '0';
+	char* aux;
+	long conv = strtol(argv[1], &aux, 10);
+	int size = conv;
 
 	Map* m = (Map*)malloc(sizeof(Map));
 	m->size = size;
@@ -187,7 +190,9 @@ Map* extractArgs(int argc, char** argv) {
 	}
 
 	for (int j = 2; j < argc; j++) {
-		int place = argv[j][0] - '0';
+		char* aux;
+		long conv = strtol(argv[j], &aux, 10);
+		int place = conv;
 		int row = (j - 2) / size;
 		int col = (j - 2) % size;
 		m->places[row][col] = place;
@@ -202,18 +207,36 @@ void printMap(Map* m) {
 
 	for (int i = 0; i < block_size; i++) {
 		if (i % block_dim == 0) {
-			cout << "-------------------------" << endl;
+			printSeparator(block_dim);
 		}
 		cout << "| ";
 		for (int j = 0; j < block_size; j++) {
-			cout << m->places[i][j] << " ";
+			int place = m->places[i][j];
+			if (place < 10) {
+				cout << m->places[i][j] << " ";
+			} else {
+				printf("%c ", 'A' + m->places[i][j] - 10);
+			}
+
 			if (j % block_dim == block_dim - 1) {
 				cout << "| ";
 			}
 		}
 		cout << endl;
 	}
-	cout << "-------------------------" << endl;
+
+	printSeparator(block_dim);
+
+	cout << endl;
+}
+void printSeparator(int block_dim) {
+	for (int k = 0; k < block_dim; k++) {
+		cout << "--------";
+	}
+	for (int k = 0; k < block_dim - 3; k++) {
+		cout << "--------";
+	}
+	cout << endl;
 }
 
 Map* copyMap(Map* in) {
